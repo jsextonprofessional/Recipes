@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.yontainer {
+    display: flex;
+    min-height: 800px;
+    min-width: 500px;
+    border: 2px dotted hotpink;
+}
+
+.yolumn {
+    flex: 1;
+    min-height: 200px;
+    min-width: 200px;
+    border: 2px dotted aqua;
+}
