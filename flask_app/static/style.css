@@ -17,3 +17,10 @@
     min-width: 200px;
     border: 2px dotted aqua;
 }
+
+.yox {
+    border: 2px chartreuse solid;
+    min-width: 70%;
+    height: 400px;
+    vertical-align: center;
+}

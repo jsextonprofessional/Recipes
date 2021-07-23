@@ -56,7 +56,21 @@ def insert_new_recipe():
     if 'user_id' not in session:
         flash('Must log in to view this page.')
         return redirect('/')
-    return render_template('recipes_new.html')
+    return render_template('recipes_insert.html')
+
+# recipes/new route allows user to edit recipe, routes from "edit" button on dashboard
+@app.route('/recipes/edit/<recipe_id>')
+def update_recipe():
+    if 'user_id' not in session:
+        flash('Must log in to view this page.')
+        return redirect('/')
+    return render_template('recipes_edit.html')
+
+# recipes/<recipe_id> route allows user to read recipe card
+# I WILL NEED TO REWRITE THIS ROUTE AFTER TESTING. CURRENTLY HARDCODING URL FOR TESTING.
+@app.route('/recipes/show')
+def read_recipe():
+    return render_template('recipes_read.html')
 
 # logout route clears session and redirects to index
 @app.route('/logout')
