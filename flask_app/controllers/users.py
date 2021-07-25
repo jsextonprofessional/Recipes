@@ -2,6 +2,8 @@ import re
 from flask_app import app
 from flask import render_template, request, redirect, session, flash
 from flask_app.models.user import User
+from flask_app.models.recipe import Recipe
+
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
@@ -48,31 +50,79 @@ def successful_login_page():
     if 'user_id' not in session:
         flash('Must log in to view this page.')
         return redirect('/')
-    return render_template('dashboard.html')
+    recipes = Recipe.get_all_recipes()
+    print(recipes)
+    return render_template('dashboard.html', recipes = recipes)
 
 # recipes/new route allows user to add recipe, routes from "create" button on /dashboard
 @app.route('/recipes/new')
-def insert_new_recipe():
+def new_recipe():
     if 'user_id' not in session:
         flash('Must log in to view this page.')
         return redirect('/')
-    return render_template('recipes_insert.html')
+    return render_template('insert_recipes.html')
 
-# recipes/new route allows user to edit recipe, routes from "edit" button on dashboard
-@app.route('/recipes/edit/<recipe_id>')
-def update_recipe():
-    if 'user_id' not in session:
-        flash('Must log in to view this page.')
-        return redirect('/')
-    return render_template('recipes_edit.html')
+@app.route('/recipes/create', methods=['POST'])
+def create_recipe():
+    if Recipe.validate_recipe(request.form):
+        data = {
+            'recipe_name': request.form['recipe_name'],
+            'description': request.form['description'],
+            'instructions': request.form['instructions'],
+            'date': request.form['date'],
+            'under_30': request.form['under_30'],
+            'users_id': session['user_id']
+        }
+        Recipe.create_recipe(data)
+        print('recipe valid')
+        return redirect('/dashboard')
+    print('recipe invalid')
+    return redirect('/recipes/new')
 
 # recipes/<recipe_id> route allows user to read recipe card
-# I WILL NEED TO REWRITE THIS ROUTE AFTER TESTING. CURRENTLY HARDCODING URL FOR TESTING.
-@app.route('/recipes/show')
-def read_recipe():
-    return render_template('recipes_read.html')
+@app.route('/recipes/<int:recipe_id>')
+def read_recipe(recipe_id):
+    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+    return render_template('read_recipes.html', recipe = recipe)
 
-# logout route clears session and redirects to index
+# recipes/edit route allows user to edit recipe, routes from "edit" button on dashboard
+@app.route('/recipes/<int:recipe_id>/edit/')
+def edit_recipe(recipe_id):
+    if 'user_id' not in session:
+        flash('Must log in to view this page.')
+        return redirect('/')
+    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+    if session['user_id'] != recipe.users_id:
+        return redirect(f'/recipes/{recipe_id}')
+    return render_template('update_recipes.html', recipe = recipe)
+
+@app.route('/recipes/<int:recipe_id>/update', methods=['POST'])
+def update_recipe(recipe_id):
+    if Recipe.validate_recipe(request.form):
+        data = {
+            'recipe_name': request.form['recipe_name'],
+            'description': request.form['description'],
+            'instructions': request.form['instructions'],
+            'date': request.form['date'],
+            'under_30': request.form['under_30'],
+            'id': recipe_id
+        }
+        Recipe.update_recipe(data)
+        return redirect(f'/recipes/{recipe_id}')
+    return redirect(f'/recipes/{recipe_id}/edit')
+
+@app.route('/recipes/<int:recipe_id>/delete')
+def delete_recipe(recipe_id):
+    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+    if session['user_id'] != recipe.users_id:
+        return redirect(f'/recipes/{recipe_id}')
+    return render_template('delete_recipe.html', recipe = recipe)
+
+# @app.route('/recipes/<int:recipe_id>/confirm')
+# def confirm_delete_recipe(recipe_id):
+#     Recipe.delete_recipe({'id': recipe_id})
+#     return redirect('/recipes')
+# # logout route clears session and redirects to index
 @app.route('/logout')
 def user_logout():
     session.clear()

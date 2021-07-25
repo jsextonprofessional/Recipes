@@ -13,30 +13,21 @@
 
 <body>
     <nav class="justify-content-between">
-        <h1>Add New Recipe</h1>
-            <a href="/recipes/new">Create</a>
-            <a href="/logout">Logout</a>
+        <h1>Welcome {{session['first_name']}}</h1>
+        <a href="/recipes/new">Create</a>
+        <a href="/logout">Logout</a>
     </nav>
-    <div class="yontainer">
-        <div class="yolumn">
-            <form action="/dashboard">
-                <label for="recipe_name">Recipe Name:</label><br>
-                <input type="text" name="recipe_name"><br><br>
-                <label for="description">Description:</label><br>
-                <textarea name="description" cols="40" rows="4"></textarea><br>
-                <label for="instructions">Instructions:</label><br><br>
-                <textarea name="instructions" cols="40" rows="4"></textarea><br><br>
-                <input type="submit" value="Create">
-            </form>
-        </div>
-        <div class="yolumn">
-            <label for="date">Date Made On:</label><br>
-            <input type="date" name="date"><br><br>
-            <label for="under_30">Under 30 Minutes?</label><br>
-            <input type="radio" name="under_30" value="Yes">
-            <label for="under_30">Yes</label>
-            <input type="radio" name="under_30" value="No">
-            <label for="under_30">No</label>
+    <div class="yontainer justify-content-center">
+        <h1>{{recipe.recipe_name}}</h1>
+        <div class="yox">
+            <p>Description: {{recipe.description}}</p>
+            <p>Under 30 Minutes: {{recipe.under_30}} </p>
+            <p>Instructions: {{recipe.instructions}}</p>
+            <p>Date Made: {{recipe.date}}</p>
+            {% if session['user_id'] == recipe.users_id%}
+            <a href="/recipes/{{recipe.id}}/edit">Edit</a>
+            <a href="/recipes/{{recipe.id}}/delete">Delete</a>
+            {% endif %}
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

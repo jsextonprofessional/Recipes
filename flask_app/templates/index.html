@@ -26,20 +26,14 @@
             {% endwith %}
             <form action="/users/register" method="POST">
                 <label for="first_name">First Name: </label>
-                <!-- Flash "This field is required" -->
-                <!-- If pw or user's entered info is unsuccessful, save info per field sans pw -->
                 <input type="text" name="first_name"><br><br>
                 <label for="last_name">Last Name: </label>
-                <!-- Flash "This field is required" -->
                 <input type="text" name="last_name"><br><br>
                 <label for="email">Email: </label>
-                <!-- Flash "This field is required" -->
                 <input type="email" name="email"><br><br>
                 <label for="password">Password: </label>
-                <!-- Flash "This field is required" -->
                 <input type="password" name="password"><br><br>
                 <label for="confirm_password">Confirm Password: </label>
-                <!-- Flash "This field is required" -->
                 <input type="password" name="confirm_password"><br><br>
                 <input type="submit" value="Register">
             </form>

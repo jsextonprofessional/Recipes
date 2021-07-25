@@ -13,21 +13,35 @@
 
 <body>
     <nav class="justify-content-between">
-        <h1>Welcome {{session['first_name']}}</h1>
+        <h1>Add New Recipe</h1>
         <a href="/recipes/new">Create</a>
         <a href="/logout">Logout</a>
     </nav>
-    <div class="yontainer justify-content-center">
-        <h1>Add New Recipe</h1>
-        <div class="yox">
-            <p>Description: </p>
-            <p>{{ recipe.description }}</p><br>
-            <p>Under 30 Minutes: </p>
-            <p>{{ recipe.under_30 }}</p>
-            <p>Instruction: </p>
-            <p>{{ recipe.description }}</p>
-            <p>Date Made: </p>
-            <p>{{ recipe.date }}</p>
+    <div class="yontainer">
+        <div class="yolumn">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="/recipes/create" method="POST">
+                <label for="recipe_name">Recipe Name:</label><br>
+                <input type="text" name="recipe_name"><br><br>
+                <label for="description">Description:</label><br>
+                <textarea name="description" cols="40" rows="4"></textarea><br>
+                <label for="instructions">Instructions:</label><br><br>
+                <textarea name="instructions" cols="40" rows="4"></textarea><br><br>
+                <label for="date">Date Made On:</label><br>
+                <input type="date" name="date"><br><br>
+                <label for="under_30">Under 30 Minutes?</label><br>
+                <input type="radio" name="under_30" value="Yes">
+                <label for="under_30">Yes</label>
+                <input type="radio" name="under_30" value="No">
+                <label for="under_30">No</label>
+                <input type="submit" value="Create">
+            </form>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
