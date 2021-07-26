@@ -113,16 +113,21 @@ def update_recipe(recipe_id):
 
 @app.route('/recipes/<int:recipe_id>/delete')
 def delete_recipe(recipe_id):
-    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
-    if session['user_id'] != recipe.users_id:
-        return redirect(f'/recipes/{recipe_id}')
-    return render_template('delete_recipe.html', recipe = recipe)
+    data = {
+        'id': recipe_id
+    }
+    Recipe.delete_recipe_by_id(data)
+    return redirect('/dashboard')
 
-# @app.route('/recipes/<int:recipe_id>/confirm')
-# def confirm_delete_recipe(recipe_id):
-#     Recipe.delete_recipe({'id': recipe_id})
-#     return redirect('/recipes')
-# # logout route clears session and redirects to index
+# original delete route
+# @app.route('/recipes/<int:recipe_id>/delete')
+# def delete_recipe(recipe_id):
+#     recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+#     if session['user_id'] = recipe.users_id:
+#         return redirect(f'/recipes/{recipe_id}')
+#     return render_template('delete_recipe.html', recipe = recipe)
+
+
 @app.route('/logout')
 def user_logout():
     session.clear()
